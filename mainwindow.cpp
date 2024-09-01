@@ -90,7 +90,6 @@ void MainWindow::remainingTimeCounter()
 void MainWindow::on_checkBox_stateChanged(int state)
 {
 
-
     QString path = QCoreApplication::applicationFilePath();
     QFileInfo fileInfo(path);
     QString working_dir = fileInfo.absolutePath();
