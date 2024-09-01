@@ -94,12 +94,7 @@ void MainWindow::on_checkBox_stateChanged(int state)
     QString path = QCoreApplication::applicationFilePath();
     QFileInfo fileInfo(path);
     QString working_dir = fileInfo.absolutePath();
-    // QString command_qs_lin = "openvpn " + working_dir + "/config.ovpn";
-    // QByteArray command_lin = command_qs_lin.toUtf8();
-    // const char* cStr_lin = command_lin.constData();
-    // QString command_qs_win = "openvpn.exe " + working_dir + "/config.ovpn";
-    // QByteArray command_win = command_qs_win.toUtf8();
-    // const char* cStr_win = command_win.constData();
+
     int cnt = 0;
     for (const auto& entry : fs::directory_iterator(fs::current_path())) {
         if (entry.is_regular_file() && (entry.path().extension() == ".ovpn" || entry.path().extension() == ".json"))
