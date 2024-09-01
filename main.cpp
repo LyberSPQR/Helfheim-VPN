@@ -15,22 +15,23 @@ int main(int argc, char *argv[])
 
     // Установка значка приложения
 
-    QIcon appIcon(":/resources/resources/icons/icon.png");
-    app.setWindowIcon(appIcon);
+
     //Set Style
     QFile styleSheetFile(":/resources/resources/styles/style2.qss");
     styleSheetFile.open(QFile::ReadOnly);
     QString styleSheet = QLatin1String(styleSheetFile.readAll());
     app.setStyleSheet(styleSheet);
-    int fontId = QFontDatabase::addApplicationFont("font.ttf");
-    QString family = QFontDatabase::applicationFontFamilies(fontId).at(0);
-    QFont font(family);
+    // int fontId = QFontDatabase::addApplicationFont("font.ttf");
+    // QString family = QFontDatabase::applicationFontFamilies(fontId).at(0);
+    // QFont font(family);
 
+    QIcon appIcon("D:/src/resources/icons/prog.ico");
+    app.setWindowIcon(appIcon);
 
 
     MainWindow w;
 
-
+   w.setFixedSize(295, 410);
     w.show();
 
     return app.exec();

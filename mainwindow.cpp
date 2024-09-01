@@ -15,6 +15,10 @@
 #include <QFile>
 #include <filesystem>
 #include <QTimer>
+#include <QWindow>
+
+
+
 
 
     namespace fs = std::filesystem;
@@ -26,6 +30,9 @@ QString osys = "lin";
 #endif
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+
+
+
     ui->setupUi(this);
     ui->statusbar->setStyleSheet("color: #c1c1c1");
     //QFont font("Arial", 12, QFont::Bold);;
@@ -38,6 +45,36 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(timer, &QTimer::timeout, this, &MainWindow::remainingTimeCounter);
     timer->start(600000);
 
+    // int id = QFontDatabase::addApplicationFont(":/resources/resources/fonts/Yggdrasil.ttf");
+    // QString family1 = QFontDatabase::applicationFontFamilies(id).at(0);
+    // QFont Yggdrasil(family1);
+
+
+    int id2 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/norse.bold.otf");
+    QString family2 = QFontDatabase::applicationFontFamilies(id2).at(0);
+    QFont norse_bold(family2);
+
+    // int id3 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/norse.regular.otf");
+    // QString family3 = QFontDatabase::applicationFontFamilies(id3).at(0);
+    // QFont norse_regular(family3);
+
+    // int id4 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/odins_regular.ttf");
+    // QString family4 = QFontDatabase::applicationFontFamilies(id4).at(0);
+    // QFont odins_regular(family4);
+
+    // int id5 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/odins_ragged.ttf");
+    // QString family5 = QFontDatabase::applicationFontFamilies(id5).at(0);
+    // QFont odins_ragged(family5);
+
+    // int id6 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/2-prong-tree.regular.ttf");
+    // QString family6 = QFontDatabase::applicationFontFamilies(id6).at(0);
+    // QFont prong_tree(family6);
+
+    // int id7 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/Art Greco.ttf");
+    // QString family7 = QFontDatabase::applicationFontFamilies(id7).at(0);
+    // QFont Art_Greco(family7);
+
+    ui->program_name->setFont(norse_bold);
 }
 
 MainWindow::~MainWindow() {
@@ -55,6 +92,7 @@ MainWindow::~MainWindow() {
 
 }
 
+
 void MainWindow::on_pushButton_clicked() {
     Auth authWindow;
     authWindow.setModal(true);
@@ -69,8 +107,6 @@ void MainWindow::remainingTimeCounter()
     QString path = QCoreApplication::applicationFilePath();
     QFileInfo fileInfo(path);
     QString working_dir = fileInfo.absolutePath();
-
-
     QString remaining_time_path = working_dir + "/remaining_time.txt";
 
     QFile file(remaining_time_path);
@@ -286,3 +322,21 @@ void MainWindow::on_pushButton_2_clicked()
     this->close();
 }
 
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton)
+    {
+        m_dragStartPosition = event->globalPos() - frameGeometry().topLeft();
+        event->accept();
+    }
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    if (event->buttons() & Qt::LeftButton)
+    {
+        move(event->globalPos() - m_dragStartPosition);
+        event->accept();
+    }
+}

@@ -35,7 +35,7 @@ public:
     QHBoxLayout *horizontalLayout_4;
     QSpacerItem *horizontalSpacer;
     QSpacerItem *horizontalSpacer_2;
-    QLabel *label_2;
+    QLabel *program_name;
     QPushButton *pushButton_3;
     QPushButton *pushButton_2;
     QSplitter *splitter;
@@ -61,13 +61,18 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
         MainWindow->resize(295, 410);
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
+        MainWindow->setSizePolicy(sizePolicy);
         QFont font;
         font.setFamilies({QString::fromUtf8("ZWAdobeF")});
         MainWindow->setFont(font);
         MainWindow->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
         MainWindow->setWindowTitle(QString::fromUtf8("Helfheim VPN"));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/icons/icon.png"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        icon.addFile(QString::fromUtf8(":/resources/resources/icons/prog_icon.png"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         MainWindow->setWindowIcon(icon);
         MainWindow->setAutoFillBackground(false);
         MainWindow->setStyleSheet(QString::fromUtf8("border-color: rgb(0, 255, 0);"));
@@ -88,19 +93,22 @@ public:
 
         horizontalLayout_4->addItem(horizontalSpacer_2);
 
-        label_2 = new QLabel(centralwidget);
-        label_2->setObjectName("label_2");
-        label_2->setMinimumSize(QSize(0, 25));
-        label_2->setMaximumSize(QSize(16777215, 50));
+        program_name = new QLabel(centralwidget);
+        program_name->setObjectName("program_name");
+        program_name->setMinimumSize(QSize(0, 25));
+        program_name->setMaximumSize(QSize(16777215, 50));
         QFont font1;
         font1.setFamilies({QString::fromUtf8("Arial")});
         font1.setBold(false);
+        font1.setItalic(false);
         font1.setKerning(true);
         font1.setStyleStrategy(QFont::PreferAntialias);
-        label_2->setFont(font1);
-        label_2->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
+        program_name->setFont(font1);
+        program_name->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
+        program_name->setStyleSheet(QString::fromUtf8("QLabel{\n"
+"font: 24px;}"));
 
-        horizontalLayout_4->addWidget(label_2, 0, Qt::AlignmentFlag::AlignHCenter);
+        horizontalLayout_4->addWidget(program_name, 0, Qt::AlignmentFlag::AlignHCenter);
 
         pushButton_3 = new QPushButton(centralwidget);
         pushButton_3->setObjectName("pushButton_3");
@@ -224,7 +232,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 295, 21));
+        menubar->setGeometry(QRect(0, 0, 295, 25));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
@@ -237,7 +245,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        label_2->setText(QCoreApplication::translate("MainWindow", "Helfheim VPN", nullptr));
+        program_name->setText(QCoreApplication::translate("MainWindow", "Helfheim VPN", nullptr));
         pushButton_3->setText(QCoreApplication::translate("MainWindow", "-", nullptr));
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "x", nullptr));
         checkBox->setText(QString());

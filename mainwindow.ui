@@ -10,6 +10,12 @@
     <height>410</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="font">
    <font>
     <family>ZWAdobeF</family>
@@ -22,8 +28,8 @@
    <string notr="true">Helfheim VPN</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>:/icons/icon.png</normaloff>:/icons/icon.png</iconset>
+   <iconset resource="resources.qrc">
+    <normaloff>:/resources/resources/icons/prog_icon.png</normaloff>:/resources/resources/icons/prog_icon.png</iconset>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -76,7 +82,7 @@
          </spacer>
         </item>
         <item alignment="Qt::AlignmentFlag::AlignHCenter">
-         <widget class="QLabel" name="label_2">
+         <widget class="QLabel" name="program_name">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -92,6 +98,8 @@
           <property name="font">
            <font>
             <family>Arial</family>
+            <pointsize>-1</pointsize>
+            <italic>false</italic>
             <bold>false</bold>
             <stylestrategy>PreferAntialias</stylestrategy>
             <kerning>true</kerning>
@@ -99,6 +107,10 @@
           </property>
           <property name="layoutDirection">
            <enum>Qt::LayoutDirection::LeftToRight</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLabel{
+font: 24px;}</string>
           </property>
           <property name="text">
            <string>Helfheim VPN</string>
@@ -347,12 +359,14 @@ QCheckBox::indicator:unchecked {
      <x>0</x>
      <y>0</y>
      <width>295</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

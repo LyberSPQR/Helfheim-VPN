@@ -18,6 +18,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QVBoxLayout>
@@ -30,15 +31,27 @@ class Ui_MainWindow
 public:
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
+    QVBoxLayout *verticalLayout_3;
+    QHBoxLayout *horizontalLayout_4;
+    QSpacerItem *horizontalSpacer;
+    QSpacerItem *horizontalSpacer_2;
+    QLabel *program_name;
+    QPushButton *pushButton_3;
+    QPushButton *pushButton_2;
     QSplitter *splitter;
     QCheckBox *checkBox;
+    QSpacerItem *verticalSpacer;
     QHBoxLayout *horizontalLayout;
+    QSpacerItem *horizontalSpacer_10;
     QLabel *ip;
     QLabel *ip_adress;
+    QSpacerItem *horizontalSpacer_7;
     QHBoxLayout *horizontalLayout_3;
+    QSpacerItem *horizontalSpacer_9;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label;
     QLabel *remain_time;
+    QSpacerItem *horizontalSpacer_8;
     QPushButton *pushButton;
     QMenuBar *menubar;
     QStatusBar *statusbar;
@@ -47,10 +60,19 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(374, 521);
+        MainWindow->resize(295, 410);
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
+        MainWindow->setSizePolicy(sizePolicy);
+        QFont font;
+        font.setFamilies({QString::fromUtf8("ZWAdobeF")});
+        MainWindow->setFont(font);
         MainWindow->setCursor(QCursor(Qt::CursorShape::ArrowCursor));
+        MainWindow->setWindowTitle(QString::fromUtf8("Helfheim VPN"));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/icons/icon.png"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        icon.addFile(QString::fromUtf8(":/resources/resources/icons/prog_icon.png"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
         MainWindow->setWindowIcon(icon);
         MainWindow->setAutoFillBackground(false);
         MainWindow->setStyleSheet(QString::fromUtf8("border-color: rgb(0, 255, 0);"));
@@ -58,6 +80,53 @@ public:
         centralwidget->setObjectName("centralwidget");
         verticalLayout = new QVBoxLayout(centralwidget);
         verticalLayout->setObjectName("verticalLayout");
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setObjectName("verticalLayout_3");
+        horizontalLayout_4 = new QHBoxLayout();
+        horizontalLayout_4->setObjectName("horizontalLayout_4");
+        horizontalLayout_4->setContentsMargins(-1, 0, -1, 0);
+        horizontalSpacer = new QSpacerItem(25, 25, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer);
+
+        horizontalSpacer_2 = new QSpacerItem(25, 25, QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Minimum);
+
+        horizontalLayout_4->addItem(horizontalSpacer_2);
+
+        program_name = new QLabel(centralwidget);
+        program_name->setObjectName("program_name");
+        program_name->setMinimumSize(QSize(0, 25));
+        program_name->setMaximumSize(QSize(16777215, 50));
+        QFont font1;
+        font1.setFamilies({QString::fromUtf8("Arial")});
+        font1.setBold(false);
+        font1.setItalic(false);
+        font1.setKerning(true);
+        font1.setStyleStrategy(QFont::PreferAntialias);
+        program_name->setFont(font1);
+        program_name->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
+        program_name->setStyleSheet(QString::fromUtf8("QLabel{\n"
+"font: 24px;}"));
+
+        horizontalLayout_4->addWidget(program_name, 0, Qt::AlignmentFlag::AlignHCenter);
+
+        pushButton_3 = new QPushButton(centralwidget);
+        pushButton_3->setObjectName("pushButton_3");
+        pushButton_3->setMinimumSize(QSize(25, 25));
+        pushButton_3->setMaximumSize(QSize(25, 25));
+
+        horizontalLayout_4->addWidget(pushButton_3);
+
+        pushButton_2 = new QPushButton(centralwidget);
+        pushButton_2->setObjectName("pushButton_2");
+        pushButton_2->setMinimumSize(QSize(25, 25));
+        pushButton_2->setMaximumSize(QSize(25, 25));
+
+        horizontalLayout_4->addWidget(pushButton_2);
+
+
+        verticalLayout_3->addLayout(horizontalLayout_4);
+
         splitter = new QSplitter(centralwidget);
         splitter->setObjectName("splitter");
         splitter->setOrientation(Qt::Orientation::Horizontal);
@@ -81,45 +150,69 @@ public:
         checkBox->setIconSize(QSize(10, 10));
         splitter->addWidget(checkBox);
 
-        verticalLayout->addWidget(splitter);
+        verticalLayout_3->addWidget(splitter);
+
+        verticalSpacer = new QSpacerItem(20, 5, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Minimum);
+
+        verticalLayout_3->addItem(verticalSpacer);
+
+
+        verticalLayout->addLayout(verticalLayout_3);
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName("horizontalLayout");
+        horizontalSpacer_10 = new QSpacerItem(5, 0, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Minimum);
+
+        horizontalLayout->addItem(horizontalSpacer_10);
+
         ip = new QLabel(centralwidget);
         ip->setObjectName("ip");
-        QFont font;
-        font.setFamilies({QString::fromUtf8("Segoe UI")});
-        font.setPointSize(11);
-        ip->setFont(font);
+        ip->setMaximumSize(QSize(80, 16777215));
+        QFont font2;
+        font2.setFamilies({QString::fromUtf8("Segoe UI")});
+        font2.setPointSize(11);
+        ip->setFont(font2);
 
-        horizontalLayout->addWidget(ip);
+        horizontalLayout->addWidget(ip, 0, Qt::AlignmentFlag::AlignLeft);
 
         ip_adress = new QLabel(centralwidget);
         ip_adress->setObjectName("ip_adress");
 
-        horizontalLayout->addWidget(ip_adress);
+        horizontalLayout->addWidget(ip_adress, 0, Qt::AlignmentFlag::AlignLeft);
+
+        horizontalSpacer_7 = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
+
+        horizontalLayout->addItem(horizontalSpacer_7);
 
 
         verticalLayout->addLayout(horizontalLayout);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName("horizontalLayout_3");
+        horizontalSpacer_9 = new QSpacerItem(5, 0, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Minimum);
+
+        horizontalLayout_3->addItem(horizontalSpacer_9);
+
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName("horizontalLayout_2");
         label = new QLabel(centralwidget);
         label->setObjectName("label");
         QPalette palette;
         label->setPalette(palette);
-        QFont font1;
-        font1.setPointSize(11);
-        label->setFont(font1);
+        QFont font3;
+        font3.setPointSize(11);
+        label->setFont(font3);
 
-        horizontalLayout_2->addWidget(label);
+        horizontalLayout_2->addWidget(label, 0, Qt::AlignmentFlag::AlignLeft);
 
         remain_time = new QLabel(centralwidget);
         remain_time->setObjectName("remain_time");
 
         horizontalLayout_2->addWidget(remain_time);
+
+        horizontalSpacer_8 = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer_8);
 
 
         horizontalLayout_3->addLayout(horizontalLayout_2);
@@ -129,7 +222,7 @@ public:
 
         pushButton = new QPushButton(centralwidget);
         pushButton->setObjectName("pushButton");
-        pushButton->setFont(font1);
+        pushButton->setFont(font3);
         pushButton->setStyleSheet(QString::fromUtf8("QPushButton:hover {\n"
 "    background-color: rgba(44, 192, 172, 0.7); \n"
 "}"));
@@ -139,7 +232,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 374, 23));
+        menubar->setGeometry(QRect(0, 0, 295, 25));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
@@ -152,13 +245,16 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Helfheim VPN", nullptr));
+        program_name->setText(QCoreApplication::translate("MainWindow", "Helfheim VPN", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("MainWindow", "-", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("MainWindow", "x", nullptr));
         checkBox->setText(QString());
         ip->setText(QCoreApplication::translate("MainWindow", "IP adress:", nullptr));
         ip_adress->setText(QCoreApplication::translate("MainWindow", "No connection", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "Remaining time:", nullptr));
         remain_time->setText(QString());
         pushButton->setText(QCoreApplication::translate("MainWindow", "Authentication", nullptr));
+        (void)MainWindow;
     } // retranslateUi
 
 };

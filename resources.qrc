@@ -1,8 +1,21 @@
 <RCC>
     <qresource prefix="/resources">
         <file>resources/buttons/button_off.png</file>
-        <file>resources/icons/icon.png</file>
-        <file>resources/styles/style2.qss</file>
         <file>resources/buttons/button_on.png</file>
+        <file>resources/fonts/cirth.ttf</file>
+        <file>resources/styles/icon.png</file>
+        <file>resources/styles/style1.qss</file>
+        <file>resources/styles/style2.qss</file>
+        <file>resources/icons/icon.ico</file>
+        <file>resources/icons/prog_icon.png</file>
+        <file>resources/buttons/iconic.ico</file>
+        <file>resources/buttons/prog_icon.ico</file>
+        <file>resources/fonts/2-prong-tree.regular.ttf</file>
+        <file>resources/fonts/Art Greco.ttf</file>
+        <file>resources/fonts/norse.bold.otf</file>
+        <file>resources/fonts/norse.regular.otf</file>
+        <file>resources/fonts/odins_ragged.ttf</file>
+        <file>resources/fonts/odins_regular.ttf</file>
+        <file>resources/fonts/Yggdrasil.ttf</file>
     </qresource>
 </RCC>
