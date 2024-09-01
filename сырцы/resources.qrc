@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>resources/buttons/button_off.png</file>
+        <file>resources/icons/icon.png</file>
+        <file>resources/styles/style2.qss</file>
+        <file>resources/buttons/button_on.png</file>
+    </qresource>
+</RCC>
