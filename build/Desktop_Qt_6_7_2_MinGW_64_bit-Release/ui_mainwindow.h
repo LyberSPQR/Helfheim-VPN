@@ -246,8 +246,8 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         program_name->setText(QCoreApplication::translate("MainWindow", "Helfheim VPN", nullptr));
-        pushButton_3->setText(QCoreApplication::translate("MainWindow", "-", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("MainWindow", "x", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("MainWindow", "\360\237\227\225\357\270\216", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("MainWindow", "\342\234\225", nullptr));
         checkBox->setText(QString());
         ip->setText(QCoreApplication::translate("MainWindow", "IP adress:", nullptr));
         ip_adress->setText(QCoreApplication::translate("MainWindow", "No connection", nullptr));
