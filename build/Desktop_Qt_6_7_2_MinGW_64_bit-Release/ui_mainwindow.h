@@ -60,7 +60,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(295, 410);
+        MainWindow->resize(304, 414);
         QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -98,7 +98,7 @@ public:
         program_name->setMinimumSize(QSize(0, 25));
         program_name->setMaximumSize(QSize(16777215, 50));
         QFont font1;
-        font1.setFamilies({QString::fromUtf8("Arial")});
+        font1.setFamilies({QString::fromUtf8("Malgun Gothic")});
         font1.setBold(false);
         font1.setItalic(false);
         font1.setKerning(true);
@@ -106,7 +106,7 @@ public:
         program_name->setFont(font1);
         program_name->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
         program_name->setStyleSheet(QString::fromUtf8("QLabel{\n"
-"font: 24px;}"));
+"font: 20px;}"));
 
         horizontalLayout_4->addWidget(program_name, 0, Qt::AlignmentFlag::AlignHCenter);
 
@@ -232,7 +232,7 @@ public:
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 295, 25));
+        menubar->setGeometry(QRect(0, 0, 304, 25));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");

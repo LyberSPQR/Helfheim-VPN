@@ -10,6 +10,7 @@ namespace fs = std::filesystem;
 
 Auth::Auth(QWidget *parent) : QDialog(parent), ui(new Ui::Auth) {
     ui->setupUi(this);
+     this->setWindowFlags(Qt::FramelessWindowHint);
     socket = new QTcpSocket(this);
     connect(socket, &QTcpSocket::connected, this, &Auth::onConnected);
     connect(socket, &QTcpSocket::readyRead, this, &Auth::onReadyRead);
@@ -101,3 +102,9 @@ Auth::~Auth() {
     delete ui;
     delete socket;
 }
+
+void Auth::on_pushButton_2_clicked()
+{
+    this->close();
+}
+

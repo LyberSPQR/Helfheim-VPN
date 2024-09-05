@@ -16,11 +16,21 @@
 #include <filesystem>
 #include <QTimer>
 #include <QWindow>
+#include <QNetworkInterface>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QUrl>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QtCore>
+#include <QtNetwork>
+#include <iostream>
+# include <winsock.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-
-
-
-
+using namespace std;
     namespace fs = std::filesystem;
 
 #if defined Q_OS_WIN
@@ -29,9 +39,12 @@ QString osys = "win";
 QString osys = "lin";
 #endif
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
+ {
 
-
+ // ipUpdater = new IpAddressUpdater(this);
 
     ui->setupUi(this);
     ui->statusbar->setStyleSheet("color: #c1c1c1");
@@ -45,36 +58,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(timer, &QTimer::timeout, this, &MainWindow::remainingTimeCounter);
     timer->start(600000);
 
-    // int id = QFontDatabase::addApplicationFont(":/resources/resources/fonts/Yggdrasil.ttf");
-    // QString family1 = QFontDatabase::applicationFontFamilies(id).at(0);
-    // QFont Yggdrasil(family1);
-
-
-    int id2 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/norse.bold.otf");
-    QString family2 = QFontDatabase::applicationFontFamilies(id2).at(0);
-    QFont norse_bold(family2);
-
-    // int id3 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/norse.regular.otf");
-    // QString family3 = QFontDatabase::applicationFontFamilies(id3).at(0);
-    // QFont norse_regular(family3);
-
-    // int id4 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/odins_regular.ttf");
-    // QString family4 = QFontDatabase::applicationFontFamilies(id4).at(0);
-    // QFont odins_regular(family4);
-
-    // int id5 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/odins_ragged.ttf");
-    // QString family5 = QFontDatabase::applicationFontFamilies(id5).at(0);
-    // QFont odins_ragged(family5);
-
-    // int id6 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/2-prong-tree.regular.ttf");
-    // QString family6 = QFontDatabase::applicationFontFamilies(id6).at(0);
-    // QFont prong_tree(family6);
-
-    // int id7 = QFontDatabase::addApplicationFont(":/resources/resources/fonts/Art Greco.ttf");
-    // QString family7 = QFontDatabase::applicationFontFamilies(id7).at(0);
-    // QFont Art_Greco(family7);
-
-    ui->program_name->setFont(norse_bold);
+    QTimer *timer_ip = new QTimer(this);
+    connect(timer_ip, &QTimer::timeout, this, [this]() {
+         current_ip;
+        getPublicIpAddress(current_ip);
+    });
+    timer_ip->start(5000);
 }
 
 MainWindow::~MainWindow() {
@@ -89,13 +78,11 @@ MainWindow::~MainWindow() {
         ckclient_process->waitForFinished(); // Ждать, пока процесс завершится
         delete ckclient_process;
         ckclient_process = nullptr;
-
 }
-
 
 void MainWindow::on_pushButton_clicked() {
     Auth authWindow;
-      authWindow.setFixedSize(450, 190);
+      authWindow.setFixedSize(400, 160);
     authWindow.setModal(true);
     authWindow.exec();
 
@@ -103,7 +90,6 @@ void MainWindow::on_pushButton_clicked() {
 void MainWindow::remainingTimeCounter()
 {
     std::time_t currentTime = std::time(nullptr);
-
 
     QString path = QCoreApplication::applicationFilePath();
     QFileInfo fileInfo(path);
@@ -122,11 +108,37 @@ void MainWindow::remainingTimeCounter()
     // else {
     //     QMessageBox::critical(this, "Ошибка", "Не удалось определить оставшееся время");
     // }
+}
 
+void MainWindow::on_pushButton_3_clicked()
+{
+    this->showMinimized();
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    this->close();
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton)
+    {
+        m_dragStartPosition = event->globalPos() - frameGeometry().topLeft();
+        event->accept();
+    }
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+    if (event->buttons() & Qt::LeftButton)
+    {
+        move(event->globalPos() - m_dragStartPosition);
+        event->accept();
+    }
 }
 void MainWindow::on_checkBox_stateChanged(int state)
 {
-
     QString path = QCoreApplication::applicationFilePath();
     QFileInfo fileInfo(path);
     QString working_dir = fileInfo.absolutePath();
@@ -139,7 +151,8 @@ void MainWindow::on_checkBox_stateChanged(int state)
         }
     }
     std:: cerr << cnt;
-    if(cnt != 0){
+    if(cnt == 2){
+        ui->statusbar->showMessage("Connecting...");
         if (osys == "lin")
         {
             if (state == Qt::Checked)
@@ -151,9 +164,9 @@ void MainWindow::on_checkBox_stateChanged(int state)
                 QString argsCk = working_dir + "-c ckclient.json -s 191.96.94.211";
                 QStringList argsList = args.split(" ", Qt::SkipEmptyParts);
                 QStringList argsListCk = argsCk.split(" ", Qt::SkipEmptyParts);
-\
+                \
 
-                if (!openvpn_process->startDetached("openvpn", argsList)) {
+                    if (!openvpn_process->startDetached("openvpn", argsList)) {
 
                     throw std::runtime_error("Failed to start openvpn process");
                     QMessageBox::critical(this, "Ошибка", "Обратитесь в службу поддержки.");
@@ -194,7 +207,6 @@ void MainWindow::on_checkBox_stateChanged(int state)
         }
         else if (osys == "win") {
 
-
             QString args = working_dir + "/config.ovpn";
             QString argsCk = "-c ckclient.json -s 191.96.94.211";
 
@@ -202,8 +214,6 @@ void MainWindow::on_checkBox_stateChanged(int state)
             QStringList argsListCk = argsCk.split(" ", Qt::SkipEmptyParts);
 
             if (state == Qt::Checked) {
-
-
                 if (openvpn_process) {
                     openvpn_process->terminate(); // Попросить завершиться корректно
                     if (!openvpn_process->waitForFinished(30)) { // Ждать до 3 секунд
@@ -251,9 +261,12 @@ void MainWindow::on_checkBox_stateChanged(int state)
                     throw std::runtime_error("Failed to start ck-client process");
                 }
 
+                // std::this_thread::sleep_for(std::chrono::seconds(5));
+
                 remainingTimeCounter();
-                ui->ip_adress->setText("191.96.94.211");
-                ui->statusbar->showMessage("VPN service is enabled");
+
+                // ui->ip_adress->setText("191.96.94.211");
+                // ui->statusbar->showMessage("VPN service is enabled");
 
 
 
@@ -277,7 +290,7 @@ void MainWindow::on_checkBox_stateChanged(int state)
                     if (ckclient_process) {
                         ckclient_process->terminate(); // Попросить завершиться корректно
                         if (!ckclient_process->waitForFinished(30)) { // Ждать до 3 секунд
-                             QProcess::execute("taskkill", QStringList() << "/F" << "/IM" << "ck-client.exe");
+                            QProcess::execute("taskkill", QStringList() << "/F" << "/IM" << "ck-client.exe");
                         }
                         delete ckclient_process; // Освобождаем память
                         ckclient_process = nullptr;
@@ -310,34 +323,29 @@ void MainWindow::on_checkBox_stateChanged(int state)
             ui->checkBox->setCheckState(Qt::Unchecked);
         }
     }
-
 }
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::getPublicIpAddress(QString &current_ip)
 {
-    this->showMinimized();
-}
+    QNetworkAccessManager *manager = new QNetworkAccessManager();
 
-void MainWindow::on_pushButton_2_clicked()
-{
-    this->close();
-}
-
-
-void MainWindow::mousePressEvent(QMouseEvent *event)
-{
-    if (event->button() == Qt::LeftButton)
-    {
-        m_dragStartPosition = event->globalPos() - frameGeometry().topLeft();
-        event->accept();
-    }
-}
-
-void MainWindow::mouseMoveEvent(QMouseEvent *event)
-{
-    if (event->buttons() & Qt::LeftButton)
-    {
-        move(event->globalPos() - m_dragStartPosition);
-        event->accept();
-    }
+    QObject::connect(manager, &QNetworkAccessManager::finished, [this, manager,&current_ip](QNetworkReply *reply) {
+        if (reply->error() == QNetworkReply::NoError) {
+             current_ip = QString(reply->readAll());
+            qDebug() << "My public IP address is: " << current_ip;
+                if(current_ip == "191.96.94.211")
+                {
+                ui->ip_adress->setText("191.96.94.211");
+                ui->statusbar->showMessage("VPN service is enable");
+                }
+            // ui->ip_adress->setText(current_ip);
+        } else {
+            qDebug() << "Error: " << reply->errorString();
+        }
+        reply->deleteLater();
+        manager->deleteLater();
+    });
+    QUrl url("https://api.ipify.org");
+    QNetworkRequest request(url);
+    manager->get(request);
 }

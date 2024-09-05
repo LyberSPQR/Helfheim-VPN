@@ -12,63 +12,75 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialog>
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QSplitter>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_Auth
 {
 public:
-    QHBoxLayout *horizontalLayout;
-    QGroupBox *groupBox;
-    QVBoxLayout *verticalLayout;
-    QHBoxLayout *horizontalLayout_2;
+    QPushButton *pushButton;
+    QLabel *label_2;
+    QSplitter *splitter;
     QLabel *label;
     QLineEdit *key;
-    QPushButton *pushButton;
+    QSplitter *splitter_3;
+    QSplitter *splitter_2;
+    QPushButton *pushButton_2;
 
     void setupUi(QDialog *Auth)
     {
         if (Auth->objectName().isEmpty())
             Auth->setObjectName("Auth");
-        Auth->resize(451, 188);
-        horizontalLayout = new QHBoxLayout(Auth);
-        horizontalLayout->setObjectName("horizontalLayout");
-        groupBox = new QGroupBox(Auth);
-        groupBox->setObjectName("groupBox");
-        verticalLayout = new QVBoxLayout(groupBox);
-        verticalLayout->setObjectName("verticalLayout");
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setObjectName("horizontalLayout_2");
-        label = new QLabel(groupBox);
-        label->setObjectName("label");
-
-        horizontalLayout_2->addWidget(label);
-
-        key = new QLineEdit(groupBox);
-        key->setObjectName("key");
-
-        horizontalLayout_2->addWidget(key);
-
-
-        verticalLayout->addLayout(horizontalLayout_2);
-
-        pushButton = new QPushButton(groupBox);
+        Auth->resize(400, 188);
+        pushButton = new QPushButton(Auth);
         pushButton->setObjectName("pushButton");
+        pushButton->setGeometry(QRect(10, 110, 381, 29));
         pushButton->setStyleSheet(QString::fromUtf8("QPushButton:hover {\n"
 "    background-color: rgba(44, 192, 172, 0.7); \n"
 "}"));
-
-        verticalLayout->addWidget(pushButton);
-
-
-        horizontalLayout->addWidget(groupBox);
-
+        label_2 = new QLabel(Auth);
+        label_2->setObjectName("label_2");
+        label_2->setGeometry(QRect(150, 10, 111, 20));
+        QFont font;
+        font.setPointSize(11);
+        label_2->setFont(font);
+        splitter = new QSplitter(Auth);
+        splitter->setObjectName("splitter");
+        splitter->setGeometry(QRect(10, 50, 381, 28));
+        splitter->setOrientation(Qt::Orientation::Horizontal);
+        label = new QLabel(splitter);
+        label->setObjectName("label");
+        splitter->addWidget(label);
+        key = new QLineEdit(splitter);
+        key->setObjectName("key");
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Expanding);
+        sizePolicy.setHorizontalStretch(100);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(key->sizePolicy().hasHeightForWidth());
+        key->setSizePolicy(sizePolicy);
+        splitter->addWidget(key);
+        splitter_3 = new QSplitter(Auth);
+        splitter_3->setObjectName("splitter_3");
+        splitter_3->setGeometry(QRect(370, 10, 25, 55));
+        splitter_3->setOrientation(Qt::Orientation::Vertical);
+        splitter_2 = new QSplitter(splitter_3);
+        splitter_2->setObjectName("splitter_2");
+        splitter_2->setOrientation(Qt::Orientation::Vertical);
+        pushButton_2 = new QPushButton(splitter_2);
+        pushButton_2->setObjectName("pushButton_2");
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Fixed);
+        sizePolicy1.setHorizontalStretch(25);
+        sizePolicy1.setVerticalStretch(25);
+        sizePolicy1.setHeightForWidth(pushButton_2->sizePolicy().hasHeightForWidth());
+        pushButton_2->setSizePolicy(sizePolicy1);
+        pushButton_2->setMinimumSize(QSize(25, 25));
+        pushButton_2->setMaximumSize(QSize(25, 25));
+        splitter_2->addWidget(pushButton_2);
+        splitter_3->addWidget(splitter_2);
 
         retranslateUi(Auth);
 
@@ -78,9 +90,10 @@ public:
     void retranslateUi(QDialog *Auth)
     {
         Auth->setWindowTitle(QCoreApplication::translate("Auth", "Helfheim VPN", nullptr));
-        groupBox->setTitle(QString());
-        label->setText(QCoreApplication::translate("Auth", "Key:", nullptr));
         pushButton->setText(QCoreApplication::translate("Auth", "Verificate", nullptr));
+        label_2->setText(QCoreApplication::translate("Auth", "Helfheim VPN", nullptr));
+        label->setText(QCoreApplication::translate("Auth", "Key:", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("Auth", "\342\234\225", nullptr));
     } // retranslateUi
 
 };

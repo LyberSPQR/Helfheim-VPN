@@ -36,7 +36,7 @@ public:
     {
         if (Auth->objectName().isEmpty())
             Auth->setObjectName("Auth");
-        Auth->resize(508, 199);
+        Auth->resize(451, 188);
         horizontalLayout = new QHBoxLayout(Auth);
         horizontalLayout->setObjectName("horizontalLayout");
         groupBox = new QGroupBox(Auth);

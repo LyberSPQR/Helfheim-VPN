@@ -31,3 +31,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     resources/fonts/CIRTH.TTF
+
+win32 {
+        RC_FILE = vpn.rc
+    }
