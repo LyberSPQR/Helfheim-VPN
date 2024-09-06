@@ -15,7 +15,6 @@ Auth::Auth(QWidget *parent) : QDialog(parent), ui(new Ui::Auth) {
     connect(socket, &QTcpSocket::connected, this, &Auth::onConnected);
     connect(socket, &QTcpSocket::readyRead, this, &Auth::onReadyRead);
 
-
     connect(&timer, &QTimer::timeout, this, &Auth::onTimeout);
     timer.setInterval(1000);
     timer.setSingleShot(true);
@@ -27,7 +26,6 @@ Auth::Auth(QWidget *parent) : QDialog(parent), ui(new Ui::Auth) {
 // }
 
 void Auth::onConnected() {
-     timer.stop();
     QString requestData = key + "\n";
     socket->write(requestData.toUtf8());
 }
@@ -43,6 +41,7 @@ void Auth::onReadyRead() {
 
 void Auth::onTimeout() {
     QString responseStr = QString::fromUtf8(responseBuffer);
+
 
     QStringList lines = responseStr.split("\n");
 
