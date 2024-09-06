@@ -82,7 +82,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_pushButton_clicked() {
     Auth authWindow;
-      authWindow.setFixedSize(400, 160);
+      authWindow.setFixedSize(400, 150);
     authWindow.setModal(true);
     authWindow.exec();
 

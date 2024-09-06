@@ -15,17 +15,19 @@ Auth::Auth(QWidget *parent) : QDialog(parent), ui(new Ui::Auth) {
     connect(socket, &QTcpSocket::connected, this, &Auth::onConnected);
     connect(socket, &QTcpSocket::readyRead, this, &Auth::onReadyRead);
 
+
     connect(&timer, &QTimer::timeout, this, &Auth::onTimeout);
     timer.setInterval(1000);
     timer.setSingleShot(true);
 }
 
-void Auth::on_pushButton_clicked() {
-    key = ui->key->text();
-    socket->connectToHost("191.96.94.211", 2000);
-}
+// void Auth::on_pushButton_clicked() {
+//     key = ui->key->text();
+//     socket->connectToHost("191.96.94.211", 2000);
+// }
 
 void Auth::onConnected() {
+     timer.stop();
     QString requestData = key + "\n";
     socket->write(requestData.toUtf8());
 }
@@ -106,5 +108,18 @@ Auth::~Auth() {
 void Auth::on_pushButton_2_clicked()
 {
     this->close();
+}
+
+
+void Auth::on_pushButton_4_clicked()
+{
+    key = ui->key->text();
+    socket->connectToHost("191.96.94.211", 2000);
+}
+
+
+void Auth::on_pushButton_3_clicked()
+{
+    this->showMinimized();
 }
 
