@@ -70,12 +70,12 @@ MainWindow::~MainWindow() {
     delete ui;
 
         openvpn_process->kill();
-        openvpn_process->waitForFinished(); // Ждать, пока процесс завершится
+        openvpn_process->waitForFinished();
         delete openvpn_process;
         openvpn_process = nullptr;
 
         ckclient_process->kill();
-        ckclient_process->waitForFinished(); // Ждать, пока процесс завершится
+        ckclient_process->waitForFinished();
         delete ckclient_process;
         ckclient_process = nullptr;
 }
@@ -187,14 +187,14 @@ void MainWindow::on_checkBox_stateChanged(int state)
                 if (reply == QMessageBox::Yes) {
                     if (openvpn_process) {
                         openvpn_process->terminate();
-                        openvpn_process->waitForFinished(); // Ждать, пока процесс завершится
+                        openvpn_process->waitForFinished();
                         delete openvpn_process;
                         openvpn_process = nullptr;
                     }
 
                     if (ckclient_process) {
                         ckclient_process->terminate();
-                        ckclient_process->waitForFinished(); // Ждать, пока процесс завершится
+                        ckclient_process->waitForFinished();
                         delete ckclient_process;
                         ckclient_process = nullptr;
                     }
@@ -215,19 +215,19 @@ void MainWindow::on_checkBox_stateChanged(int state)
 
             if (state == Qt::Checked) {
                 if (openvpn_process) {
-                    openvpn_process->terminate(); // Попросить завершиться корректно
-                    if (!openvpn_process->waitForFinished(30)) { // Ждать до 3 секунд
+                    openvpn_process->terminate();
+                    if (!openvpn_process->waitForFinished(30)) { // Ждать 3 секунды
                         QProcess::execute("taskkill", QStringList() << "/F" << "/IM" << "openvpn.exe");
                         openvpn_process->kill();
                     }
-                    delete openvpn_process; // Освобождаем память
+                    delete openvpn_process;
                     openvpn_process = nullptr;
                 }
 
                 // Завершение ckclient_process
                 if (ckclient_process) {
-                    ckclient_process->terminate(); // Попросить завершиться корректно
-                    if (!ckclient_process->waitForFinished(30)) { // Ждать до 3 секунд
+                    ckclient_process->terminate();
+                    if (!ckclient_process->waitForFinished(30)) { // Ждать 3 секунды
                         QProcess::execute("taskkill", QStringList() << "/F" << "/IM" << "ck-client.exe");
                     }
                     delete ckclient_process; // Освобождаем память
@@ -238,8 +238,8 @@ void MainWindow::on_checkBox_stateChanged(int state)
                 ckclient_process = new QProcess(this);
 
                 // Перенаправление вывода процессов в null
-                openvpn_process->setProcessChannelMode(QProcess::MergedChannels); // Объединяем stdout и stderr
-                openvpn_process->setStandardOutputFile(QByteArray()); // Перенаправляем вывод в null
+                openvpn_process->setProcessChannelMode(QProcess::MergedChannels);
+                openvpn_process->setStandardOutputFile(QByteArray());
 
                 ckclient_process->setProcessChannelMode(QProcess::MergedChannels);
                 ckclient_process->setStandardOutputFile(QByteArray());
@@ -260,15 +260,7 @@ void MainWindow::on_checkBox_stateChanged(int state)
                     ckclient_process = nullptr;
                     throw std::runtime_error("Failed to start ck-client process");
                 }
-
-                // std::this_thread::sleep_for(std::chrono::seconds(5));
-
                 remainingTimeCounter();
-
-                // ui->ip_adress->setText("191.96.94.211");
-                // ui->statusbar->showMessage("VPN service is enabled");
-
-
 
             } else {
                 QMessageBox::StandardButton reply;
@@ -277,22 +269,22 @@ void MainWindow::on_checkBox_stateChanged(int state)
                 if (reply == QMessageBox::Yes) {
                     // Завершение openvpn_proces
                     if (openvpn_process) {
-                        openvpn_process->terminate(); // Попросить завершиться корректно
-                        if (!openvpn_process->waitForFinished(30)) { // Ждать до 3 секунд
+                        openvpn_process->terminate();
+                        if (!openvpn_process->waitForFinished(30)) { // Ждать 3 секунды
                             QProcess::execute("taskkill", QStringList() << "/F" << "/IM" << "openvpn.exe");
                             openvpn_process->kill();
                         }
-                        delete openvpn_process; // Освобождаем память
+                        delete openvpn_process;
                         openvpn_process = nullptr;
                     }
 
                     // Завершение ckclient_process
                     if (ckclient_process) {
-                        ckclient_process->terminate(); // Попросить завершиться корректно
-                        if (!ckclient_process->waitForFinished(30)) { // Ждать до 3 секунд
+                        ckclient_process->terminate();
+                        if (!ckclient_process->waitForFinished(30)) { // Ждать 3 секунды
                             QProcess::execute("taskkill", QStringList() << "/F" << "/IM" << "ck-client.exe");
                         }
-                        delete ckclient_process; // Освобождаем память
+                        delete ckclient_process;
                         ckclient_process = nullptr;
                     }
                     // Подключение сигналов для освобождения ресурсов
@@ -310,7 +302,7 @@ void MainWindow::on_checkBox_stateChanged(int state)
                     ui->ip_adress->setText("No connection");
                     ui->statusbar->showMessage("VPN service is disabled");
                 } else {
-                    ui->checkBox->setChecked(true); // Сохраняем состояние
+                    ui->checkBox->setChecked(true);
                 }
             }
         }
@@ -335,7 +327,7 @@ void MainWindow::getPublicIpAddress(QString &current_ip)
             qDebug() << "My public IP address is: " << current_ip;
                 if(current_ip == "191.96.94.211")
                 {
-                ui->ip_adress->setText("191.96.94.211");
+                ui->ip_adress->setText(current_ip);
                 ui->statusbar->showMessage("VPN service is enable");
                 }
             // ui->ip_adress->setText(current_ip);
