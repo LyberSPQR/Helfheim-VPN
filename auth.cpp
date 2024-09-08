@@ -20,11 +20,6 @@ Auth::Auth(QWidget *parent) : QDialog(parent), ui(new Ui::Auth) {
     timer.setSingleShot(true);
 }
 
-// void Auth::on_pushButton_clicked() {
-//     key = ui->key->text();
-//     socket->connectToHost("191.96.94.211", 2000);
-// }
-
 void Auth::onConnected() {
     QString requestData = key + "\n";
     socket->write(requestData.toUtf8());
@@ -41,7 +36,6 @@ void Auth::onReadyRead() {
 
 void Auth::onTimeout() {
     QString responseStr = QString::fromUtf8(responseBuffer);
-
 
     QStringList lines = responseStr.split("\n");
 
@@ -109,13 +103,11 @@ void Auth::on_pushButton_2_clicked()
     this->close();
 }
 
-
 void Auth::on_pushButton_4_clicked()
 {
     key = ui->key->text();
     socket->connectToHost("191.96.94.211", 2000);
 }
-
 
 void Auth::on_pushButton_3_clicked()
 {
