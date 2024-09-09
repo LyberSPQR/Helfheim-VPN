@@ -171,16 +171,29 @@ font: 20px;}</string>
 subcontrol-position: top center;
     width: 150px;
     height: 150px;
+
 }
 
 QCheckBox::indicator:checked {
     image: url(&quot;:/resources/resources/buttons/button_on.png&quot;);
 }
-
 QCheckBox::indicator:unchecked {
-    image: url(&quot;:/resources/resources/buttons/button_off.png&quot;);
+   image: url(&quot;:/resources/resources/buttons/button_off.png&quot;);
 }
-</string>
+QCheckBox:hover::indicator:unchecked {
+    image: url(&quot;:/resources/resources/icons/prog_icon.png&quot;);
+}
+QCheckBox:hover::indicator:checked {
+    image: url(&quot;:/resources/resources/icons/prog_icon.png&quot;);
+}
+QCheckBox:hover {
+background:
+       
+        linear-gradient(
+          rgba(0, 0, 0, 0.7));
+
+}
+            </string>
          </property>
          <property name="text">
           <string/>
@@ -190,6 +203,9 @@ QCheckBox::indicator:unchecked {
            <width>10</width>
            <height>10</height>
           </size>
+         </property>
+         <property name="tristate">
+          <bool>false</bool>
          </property>
         </widget>
        </widget>

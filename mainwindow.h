@@ -6,6 +6,8 @@
 #include <QMouseEvent>
 #include <QPoint>
 #include <QNetworkAccessManager>
+#include <QCheckBox>
+#include <QEvent>
 
 
 QT_BEGIN_NAMESPACE
@@ -29,12 +31,16 @@ private slots:
     void on_pushButton_3_clicked();
 
     void on_pushButton_2_clicked();
-
+    // void onCheckBoxHovered();
+    // void onCheckBoxLeft();
 
 public slots:
       void remainingTimeCounter();
       void mousePressEvent(QMouseEvent *event) override;
         void mouseMoveEvent(QMouseEvent *event) override;
+
+      void onButtonEntered();
+      void onButtonLeft();
         // void fetchIpAddress();
 private:
     Ui::MainWindow *ui;
@@ -45,7 +51,10 @@ private:
     // QNetworkAccessManager *networkManager;
     // QNetworkReply* previousReply = nullptr;
     //  bool fetchingInProgress;
-
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;
+    // void enterEvent(QEnterEvent *event) override;
+    // void leaveEvent(QEvent *event) override;
 };
 
 #endif // MAINWINDOW_H

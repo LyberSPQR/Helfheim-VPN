@@ -43,7 +43,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
  {
-
  // ipUpdater = new IpAddressUpdater(this);
 
     ui->setupUi(this);
@@ -63,7 +62,13 @@ MainWindow::MainWindow(QWidget *parent) :
          current_ip;
         getPublicIpAddress(current_ip);
     });
-    timer_ip->start(5000);
+    timer_ip->start(500);
+
+    // Добавьте следующие строки в ваш конструктор MainWindow для установки mouseTracking для checkBox
+    ui->checkBox->setMouseTracking(true);
+
+ ui->checkBox->installEventFilter(this);
+
 }
 
 MainWindow::~MainWindow() {
@@ -340,4 +345,47 @@ void MainWindow::getPublicIpAddress(QString &current_ip)
     QUrl url("https://api.ipify.org");
     QNetworkRequest request(url);
     manager->get(request);
+}
+
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == ui->checkBox) {
+        if (event->type() == QEvent::Enter) {
+            onButtonEntered();
+        } else if (event->type() == QEvent::Leave) {
+            onButtonLeft();
+        }
+    }
+    return false;
+}
+
+void MainWindow::onButtonEntered()
+{
+    ui->checkBox->setStyleSheet("QCheckBox::indicator {"
+                                "    subcontrol-position: top center;"
+                                "    width: 150px;"
+                                "    height: 150px;"
+                                "}"
+                                "QCheckBox::indicator:checked {"
+                                "    image: url(:/resources/resources/buttons/button_on_hover.png);"
+                                "}"
+                                "QCheckBox::indicator:unchecked {"
+                                "    image: url(:/resources/resources/buttons/button_off_hover.png);"
+                                "}");
+}
+
+void MainWindow::onButtonLeft()
+{
+    ui->checkBox->setStyleSheet("QCheckBox::indicator {"
+                                "    subcontrol-position: top center;"
+                                "    width: 150px;"
+                                "    height: 150px;"
+                                "}"
+                                "QCheckBox::indicator:checked {"
+                                "    image: url(:/resources/resources/buttons/button_on.png);"
+                                "}"
+                                "QCheckBox::indicator:unchecked {"
+                                "    image: url(:/resources/resources/buttons/button_off.png);"
+                                "}");
 }
