@@ -29,6 +29,8 @@
 # include <winsock.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <chrono>
+#include <thread>
 
 using namespace std;
     namespace fs = std::filesystem;
@@ -68,6 +70,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->checkBox->setMouseTracking(true);
 
  ui->checkBox->installEventFilter(this);
+
+    QTimer *delayTimer = new QTimer(this);
+
+    // Подключаем слот для обработки завершения задержки
+    connect(delayTimer, &QTimer::timeout, this, [](){
+        // Этот код будет выполнен по истечении времени задержки
+        qDebug() << "Задержка завершена";
+    });
+
+    // Устанавливаем время задержки в 2 секунды (2000 мс)
+    delayTimer->setSingleShot(true);
 
 }
 
@@ -144,6 +157,10 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 }
 void MainWindow::on_checkBox_stateChanged(int state)
 {
+    qDebug() << "Start processing";
+    auto start = std::chrono::high_resolution_clock::now();
+    // Ваша логика
+
     QString path = QCoreApplication::applicationFilePath();
     QFileInfo fileInfo(path);
     QString working_dir = fileInfo.absolutePath();
@@ -160,57 +177,110 @@ void MainWindow::on_checkBox_stateChanged(int state)
         ui->statusbar->showMessage("Connecting...");
         if (osys == "lin")
         {
-            if (state == Qt::Checked)
-            {
-                QMessageBox::critical(this, "Ошибка", "Линукс-блок запустился");
+            QString args = working_dir + "/config.ovpn";
+            QString argsCk = "-c ckclient.json -s 191.96.94.211";
+
+            QStringList argsList = args.split(" ", Qt::SkipEmptyParts);
+            QStringList argsListCk = argsCk.split(" ", Qt::SkipEmptyParts);
+
+            if (state == Qt::Checked) {
+                if (openvpn_process) {
+                    openvpn_process->terminate();
+                    if (!openvpn_process->waitForFinished(30)) { // Ждать 3 секунды
+                        QProcess::execute("taskkill", QStringList() << "/F" << "/IM" << "openvpn.exe");
+                        openvpn_process->kill();
+                    }
+                    delete openvpn_process;
+                    openvpn_process = nullptr;
+                }
+
+                // Завершение ckclient_process
+                if (ckclient_process) {
+                    ckclient_process->terminate();
+                    if (!ckclient_process->waitForFinished(30)) { // Ждать 3 секунды
+                        QProcess::execute("taskkill", QStringList() << "/F" << "/IM" << "ck-client.exe");
+                    }
+                    delete ckclient_process; // Освобождаем память
+                    ckclient_process = nullptr;
+                }
+
                 openvpn_process = new QProcess(this);
                 ckclient_process = new QProcess(this);
-                QString args = working_dir + "/config.ovpn";
-                QString argsCk = working_dir + "-c ckclient.json -s 191.96.94.211";
-                QStringList argsList = args.split(" ", Qt::SkipEmptyParts);
-                QStringList argsListCk = argsCk.split(" ", Qt::SkipEmptyParts);
-                \
 
-                    if (!openvpn_process->startDetached("openvpn", argsList)) {
+                // Перенаправление вывода процессов в null
+                openvpn_process->setProcessChannelMode(QProcess::MergedChannels);
+                openvpn_process->setStandardOutputFile(QByteArray());
 
-                    throw std::runtime_error("Failed to start openvpn process");
+                ckclient_process->setProcessChannelMode(QProcess::MergedChannels);
+                ckclient_process->setStandardOutputFile(QByteArray());
+
+                ckclient_process->start("ck-client", argsListCk);
+                if (!ckclient_process->waitForStarted()) {
                     QMessageBox::critical(this, "Ошибка", "Обратитесь в службу поддержки.");
-                }
-
-                if (!ckclient_process->startDetached("ck-client",argsListCk)) {
+                    delete ckclient_process;
+                    ckclient_process = nullptr;
                     throw std::runtime_error("Failed to start ck-client process");
-                    QMessageBox::critical(this, "Ошибка", "Обратитесь в службу поддержки.");
                 }
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                // Запуск процессов
+                openvpn_process->start("openvpn", argsList);
+                if (!openvpn_process->waitForStarted()) {
+                    QMessageBox::critical(this, "Ошибка", "Обратитесь в службу поддержки.");
+                    delete openvpn_process;
+                    openvpn_process = nullptr;
+                    throw std::runtime_error("Failed to start openvpn process");
+                }
+
 
                 remainingTimeCounter();
-                ui->ip_adress->setText("191.96.94.211");
-                ui->statusbar->showMessage("VPN service is enable");
+                auto end = std::chrono::high_resolution_clock::now();
+                qDebug() << "Processing time:" << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms";
             } else {
                 QMessageBox::StandardButton reply;
-                reply = QMessageBox::question(this, "Confirmation", "Are you sure you want to disable VPN service?", QMessageBox::Yes|QMessageBox::No);
+                reply = QMessageBox::question(this, "Confirmation", "Are you sure you want to disable VPN service?", QMessageBox::Yes | QMessageBox::No);
 
                 if (reply == QMessageBox::Yes) {
+                    // Завершение openvpn_proces
                     if (openvpn_process) {
                         openvpn_process->terminate();
-                        openvpn_process->waitForFinished();
+                        if (!openvpn_process->waitForFinished(30)) { // Ждать 3 секунды
+                            QProcess::execute("taskkill", QStringList() << "/F" << "/IM" << "openvpn.exe");
+                            openvpn_process->kill();
+                        }
                         delete openvpn_process;
                         openvpn_process = nullptr;
                     }
 
+                    // Завершение ckclient_process
                     if (ckclient_process) {
                         ckclient_process->terminate();
-                        ckclient_process->waitForFinished();
+                        if (!ckclient_process->waitForFinished(30)) { // Ждать 3 секунды
+                            QProcess::execute("taskkill", QStringList() << "/F" << "/IM" << "ck-client.exe");
+                        }
                         delete ckclient_process;
                         ckclient_process = nullptr;
                     }
+                    // Подключение сигналов для освобождения ресурсов
+                    connect(openvpn_process, &QProcess::finished, this, [=]() {
+                        qDebug() << "openvpn процесс завершился";
+                        openvpn_process->deleteLater();
+                    });
+
+                    connect(ckclient_process, &QProcess::finished, this, [=]() {
+                        qDebug() << "ckclient процесс завершился";
+                        ckclient_process->deleteLater();
+                    });
+
+
                     ui->ip_adress->setText("No connection");
-                    ui->statusbar->showMessage("VPN service is disable");
+                    ui->statusbar->showMessage("VPN service is disabled");
                 } else {
                     ui->checkBox->setChecked(true);
                 }
             }
         }
-        else if (osys == "win") {
+        else if (osys == "win")
+        {
 
             QString args = working_dir + "/config.ovpn";
             QString argsCk = "-c ckclient.json -s 191.96.94.211";
@@ -249,6 +319,14 @@ void MainWindow::on_checkBox_stateChanged(int state)
                 ckclient_process->setProcessChannelMode(QProcess::MergedChannels);
                 ckclient_process->setStandardOutputFile(QByteArray());
 
+                ckclient_process->start("ck-client.exe", argsListCk);
+                if (!ckclient_process->waitForStarted()) {
+                    QMessageBox::critical(this, "Ошибка", "Обратитесь в службу поддержки.");
+                    delete ckclient_process;
+                    ckclient_process = nullptr;
+                    throw std::runtime_error("Failed to start ck-client process");
+                }
+ std::this_thread::sleep_for(std::chrono::seconds(1));
                 // Запуск процессов
                 openvpn_process->start("openvpn.exe", argsList);
                 if (!openvpn_process->waitForStarted()) {
@@ -258,15 +336,10 @@ void MainWindow::on_checkBox_stateChanged(int state)
                     throw std::runtime_error("Failed to start openvpn process");
                 }
 
-                ckclient_process->start("ck-client.exe", argsListCk);
-                if (!ckclient_process->waitForStarted()) {
-                    QMessageBox::critical(this, "Ошибка", "Обратитесь в службу поддержки.");
-                    delete ckclient_process;
-                    ckclient_process = nullptr;
-                    throw std::runtime_error("Failed to start ck-client process");
-                }
-                remainingTimeCounter();
 
+                remainingTimeCounter();
+                auto end = std::chrono::high_resolution_clock::now();
+                qDebug() << "Processing time:" << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms";
             } else {
                 QMessageBox::StandardButton reply;
                 reply = QMessageBox::question(this, "Confirmation", "Are you sure you want to disable VPN service?", QMessageBox::Yes | QMessageBox::No);
