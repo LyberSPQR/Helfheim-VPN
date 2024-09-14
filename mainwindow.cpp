@@ -1,13 +1,8 @@
-
-#include <QFontDatabase>
 #include <QApplication>
-#include <QFontDatabase>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "auth.h"
-#include <iostream>
 #include <QMessageBox>
-#include <QDir>
 #include <QTextStream>
 #include <QString>
 #include <QStringList>
@@ -20,20 +15,13 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrl>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonValue>
 #include <QtCore>
 #include <QtNetwork>
-#include <iostream>
-# include <winsock.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <chrono>
 #include <thread>
 
 using namespace std;
-    namespace fs = std::filesystem;
+namespace fs = std::filesystem;
 
 #if defined Q_OS_WIN
 QString osys = "win";
@@ -44,66 +32,49 @@ QString osys = "lin";
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
- {
- // ipUpdater = new IpAddressUpdater(this);
-
+{
     ui->setupUi(this);
     ui->statusbar->setStyleSheet("color: #c1c1c1");
-    //QFont font("Arial", 12, QFont::Bold);;
     setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
     this->setWindowFlags(Qt::FramelessWindowHint);
 
     openvpn_process = nullptr;
     ckclient_process = nullptr;
+
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::remainingTimeCounter);
     timer->start(600000);
 
     QTimer *timer_ip = new QTimer(this);
     connect(timer_ip, &QTimer::timeout, this, [this]() {
-         current_ip;
+        // current_ip;
         getPublicIpAddress(current_ip);
     });
-    timer_ip->start(500);
+    timer_ip->start(1000);
 
-    // Добавьте следующие строки в ваш конструктор MainWindow для установки mouseTracking для checkBox
     ui->checkBox->setMouseTracking(true);
-
- ui->checkBox->installEventFilter(this);
-
-    QTimer *delayTimer = new QTimer(this);
-
-    // Подключаем слот для обработки завершения задержки
-    connect(delayTimer, &QTimer::timeout, this, [](){
-        // Этот код будет выполнен по истечении времени задержки
-        qDebug() << "Задержка завершена";
-    });
-
-    // Устанавливаем время задержки в 2 секунды (2000 мс)
-    delayTimer->setSingleShot(true);
-
+    ui->checkBox->installEventFilter(this);
 }
 
 MainWindow::~MainWindow() {
     delete ui;
 
-        openvpn_process->kill();
-        openvpn_process->waitForFinished();
-        delete openvpn_process;
-        openvpn_process = nullptr;
+    openvpn_process->kill();
+    openvpn_process->waitForFinished();
+    delete openvpn_process;
+    openvpn_process = nullptr;
 
-        ckclient_process->kill();
-        ckclient_process->waitForFinished();
-        delete ckclient_process;
-        ckclient_process = nullptr;
+    ckclient_process->kill();
+    ckclient_process->waitForFinished();
+    delete ckclient_process;
+    ckclient_process = nullptr;
 }
 
 void MainWindow::on_pushButton_clicked() {
     Auth authWindow;
-      authWindow.setFixedSize(400, 150);
+    authWindow.setFixedSize(400, 150);
     authWindow.setModal(true);
     authWindow.exec();
-
 }
 void MainWindow::remainingTimeCounter()
 {
@@ -123,21 +94,15 @@ void MainWindow::remainingTimeCounter()
         remain_time = (remain_time - currentTime) / 86400;
         ui->remain_time->setText(QString::number(remain_time) + " days");
     }
-    // else {
-    //     QMessageBox::critical(this, "Ошибка", "Не удалось определить оставшееся время");
-    // }
 }
-
 void MainWindow::on_pushButton_3_clicked()
 {
     this->showMinimized();
 }
-
 void MainWindow::on_pushButton_2_clicked()
 {
     this->close();
 }
-
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
@@ -146,7 +111,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         event->accept();
     }
 }
-
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons() & Qt::LeftButton)
@@ -157,27 +121,27 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 }
 void MainWindow::on_checkBox_stateChanged(int state)
 {
-    qDebug() << "Start processing";
-    auto start = std::chrono::high_resolution_clock::now();
-    // Ваша логика
+    // qDebug() << "Start processing";
+    // auto start = std::chrono::high_resolution_clock::now(); // Таймер для отладки времени работы блока
 
     QString path = QCoreApplication::applicationFilePath();
     QFileInfo fileInfo(path);
     QString working_dir = fileInfo.absolutePath();
 
-    int cnt = 0;
+    int cnt = 0; // счётчик для проверки наличия файлов конфигурации в каталоге программы
     for (const auto& entry : fs::directory_iterator(fs::current_path())) {
         if (entry.is_regular_file() && (entry.path().extension() == ".ovpn" || entry.path().extension() == ".json"))
         {
             cnt++;
         }
     }
-    std:: cerr << cnt;
+    // std:: cerr << cnt;
+    // QMessageBox::information(this, "System", osys);
     if(cnt == 2){
         ui->statusbar->showMessage("Connecting...");
         if (osys == "lin")
         {
-            QString args =/* working_dir +*/ "./config.ovpn";
+            QString args = "./config.ovpn";
             QString argsCk = "-c ckclient.json -s 191.96.94.211";
 
             QStringList argsList = args.split(" ", Qt::SkipEmptyParts);
@@ -221,23 +185,21 @@ void MainWindow::on_checkBox_stateChanged(int state)
                     ckclient_process = nullptr;
                     throw std::runtime_error("Failed to start ck-client process");
                 }
-                std::this_thread::sleep_for(std::chrono::seconds(1));
+               std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 // Запуск процессов
-                openvpn_process->start("./openvpn", argsList);
+                openvpn_process->start("openvpn", argsList);
                 if (!openvpn_process->waitForStarted()) {
                     QMessageBox::critical(this, "Ошибка", "Обратитесь в службу поддержки.");
                     delete openvpn_process;
                     openvpn_process = nullptr;
                     throw std::runtime_error("Failed to start openvpn process");
                 }
-
-
                 remainingTimeCounter();
-                auto end = std::chrono::high_resolution_clock::now();
-                qDebug() << "Processing time:" << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms";
+                //     auto end = std::chrono::high_resolution_clock::now();
+                //     qDebug() << "Processing time:" << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms";
             } else {
                 QMessageBox::StandardButton reply;
-                reply = QMessageBox::question(this, "Confirmation", "Are you sure you want to disable VPN service?", QMessageBox::Yes | QMessageBox::No);
+                reply = QMessageBox::question(this, "Confirmation", "Are you sure you want to disable VPN service?", QMessageBox::No | QMessageBox::Yes);
 
                 if (reply == QMessageBox::Yes) {
                     // Завершение openvpn_proces
@@ -270,7 +232,6 @@ void MainWindow::on_checkBox_stateChanged(int state)
                         ckclient_process->deleteLater();
                     });
 
-
                     ui->ip_adress->setText("No connection");
                     ui->statusbar->showMessage("VPN service is disabled");
                 } else {
@@ -280,7 +241,6 @@ void MainWindow::on_checkBox_stateChanged(int state)
         }
         else if (osys == "win")
         {
-
             QString args = working_dir + "/config.ovpn";
             QString argsCk = "-c ckclient.json -s 191.96.94.211";
 
@@ -325,7 +285,7 @@ void MainWindow::on_checkBox_stateChanged(int state)
                     ckclient_process = nullptr;
                     throw std::runtime_error("Failed to start ck-client process");
                 }
- std::this_thread::sleep_for(std::chrono::seconds(1));
+                std::this_thread::sleep_for(std::chrono::seconds(1));
                 // Запуск процессов
                 openvpn_process->start("openvpn.exe", argsList);
                 if (!openvpn_process->waitForStarted()) {
@@ -337,8 +297,8 @@ void MainWindow::on_checkBox_stateChanged(int state)
 
 
                 remainingTimeCounter();
-                auto end = std::chrono::high_resolution_clock::now();
-                qDebug() << "Processing time:" << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms";
+                // auto end = std::chrono::high_resolution_clock::now();
+                // qDebug() << "Processing time:" << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms";
             } else {
                 QMessageBox::StandardButton reply;
                 reply = QMessageBox::question(this, "Confirmation", "Are you sure you want to disable VPN service?", QMessageBox::Yes | QMessageBox::No);
@@ -354,7 +314,6 @@ void MainWindow::on_checkBox_stateChanged(int state)
                         delete openvpn_process;
                         openvpn_process = nullptr;
                     }
-
                     // Завершение ckclient_process
                     if (ckclient_process) {
                         ckclient_process->terminate();
@@ -374,7 +333,6 @@ void MainWindow::on_checkBox_stateChanged(int state)
                         qDebug() << "ckclient процесс завершился";
                         ckclient_process->deleteLater();
                     });
-
 
                     ui->ip_adress->setText("No connection");
                     ui->statusbar->showMessage("VPN service is disabled");
@@ -400,13 +358,13 @@ void MainWindow::getPublicIpAddress(QString &current_ip)
 
     QObject::connect(manager, &QNetworkAccessManager::finished, [this, manager,&current_ip](QNetworkReply *reply) {
         if (reply->error() == QNetworkReply::NoError) {
-             current_ip = QString(reply->readAll());
+            current_ip = QString(reply->readAll());
             qDebug() << "My public IP address is: " << current_ip;
-                if(current_ip == "191.96.94.211")
-                {
+            if(current_ip == "191.96.94.211")
+            {
                 ui->ip_adress->setText(current_ip);
                 ui->statusbar->showMessage("VPN service is enable");
-                }
+            }
             // ui->ip_adress->setText(current_ip);
         } else {
             qDebug() << "Error: " << reply->errorString();
@@ -418,7 +376,6 @@ void MainWindow::getPublicIpAddress(QString &current_ip)
     QNetworkRequest request(url);
     manager->get(request);
 }
-
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
@@ -461,3 +418,4 @@ void MainWindow::onButtonLeft()
                                 "    image: url(:/resources/resources/buttons/button_off.png);"
                                 "}");
 }
+
